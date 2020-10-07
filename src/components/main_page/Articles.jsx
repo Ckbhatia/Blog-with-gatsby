@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext,useState } from "react";
 import { Link, graphql, useStaticQuery } from "gatsby";
 import Img from "gatsby-image";
 import Context from "../../context";
@@ -6,6 +6,28 @@ import styled from "styled-components";
 import "../../assets/main.scss";
 
 export default function Articles() {
+  const emptyQuery = ""
+  const [state, setState] = useState({
+    filteredData: [],
+    query: emptyQuery,
+  })
+
+  const handleInputChange = (event) => {
+      const query = event.target.value
+      console.log(event.target.value)
+      const posts = data.allContentfulBlogPost.edges || []
+      const filteredData = posts.filter(post => {
+      const { title } = post.node
+        return (
+          title.toLowerCase().includes(query.toLowerCase()) 
+        )
+      })
+      setState({
+        query,
+        filteredData, 
+      })
+    }
+
   const { isDay } = useContext(Context);
 
   const data = useStaticQuery(graphql`
@@ -30,16 +52,29 @@ export default function Articles() {
       }
     }
   `);
-
+        const allPosts = data.allContentfulBlogPost.edges
+        const { filteredData, query } = state
+        const hasSearchResults = filteredData && query !== emptyQuery
+        const posts = hasSearchResults ? filteredData : allPosts
   return (
+
     <Div className="article-main-container">
+      <input
+              type="text"
+              className="searchbox"
+              aria-label="Search"
+              placeholder="Type to filter posts..."
+              onChange={handleInputChange}
+          />
       <ul className="article-list-container">
+      
         {/* Get articles data dynamicaly */}
-        {data.allContentfulBlogPost.edges.map((edge, i) => {
+        {posts.map((edge, i) => {
+          const { title, slug, topic} = edge.node
           return (
             <li key={i} className="article-item-container">
               <Link
-                to={`/blog/${edge.node.slug}`}
+                to={`/blog/${slug}`}
                 className="article-item-link"
               >
                 <div
@@ -59,13 +94,14 @@ export default function Articles() {
                       className={`article-cate-text topic-text-${isDay ? "light" : "dark"
                         }`}
                     >
-                      {edge.node.topic}
+                      {topic}
                     </span>
                     <h4
                       className={`article-heading heading-${isDay ? "light" : "dark"
                         }`}
                     >
-                      {edge.node.title}
+                      {/* //title content of page */}
+                      {title}
                     </h4>
                   </div>
                 </div>
@@ -126,7 +162,7 @@ const Div = styled.div`
     border-radius: 10px;
   }
   .article-text-container {
-    margin-top: 1rem;
+    margin-top: 3rem;
   }
   // Category text
   .article-cate-text {
@@ -146,5 +182,12 @@ const Div = styled.div`
   }
   .topic-text-dark {
     color: #969696;
+  }
+
+  .searchbox {
+    width: 20rem;
+    height: 2rem;
+    border-radius: .4rem;
+    border: 1px solid #2fa5ea;
   }
 `;

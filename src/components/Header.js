@@ -15,8 +15,9 @@ import { IoIosMoon } from "react-icons/io";
 import styled from "styled-components";
 import Context from "../context";
 
-export default function Header() {
-  const { isDay, toggleDay } = useContext(Context);
+function Header()  {
+
+  const { isDay, toggleDay} = useContext(Context);
 
   const data = useStaticQuery(graphql`
     query {
@@ -64,16 +65,22 @@ export default function Header() {
             <NavDropdown.Item href="#">HTML & CSS</NavDropdown.Item>
           </NavDropdown>
         </Nav>
+        {/* //search box begin*/}
         <Form inline>
           <Button className="search-btn" variant="outline-success">
             <GoSearch />
           </Button>
           <FormControl
             type="text"
+            className="textbox"
             placeholder="SEARCH"
             className={`mr-sm-2 form-control form-${isDay ? "light" : "dark"}`}
           />
+
         </Form>
+         {/* //search box end*/}
+
+         {/* dark mode button begin */}
         <div className="mode-toggler-container">
           {isDay ? (
             <button
@@ -95,13 +102,23 @@ export default function Header() {
             </button>
           )}
         </div>
+            {/* dark mode button end */}
         {/* </Navbar.Collapse> */}
       </Navbar>
     </Div>
   );
 }
+export default Header;
 
 const Div = styled.div`
+
+.search-btn{
+  background-color: #000;
+}
+.textbox {
+  background-color: #000;
+  z-index: 3;
+}
   margin: 0 2rem;
   @media screen and (max-width: 440px) {
     // Reset margin

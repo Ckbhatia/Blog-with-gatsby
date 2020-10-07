@@ -29,6 +29,8 @@ export default function Footer() {
   );
 }
 
+
+
 const FooterElement = styled.footer`
   display: flex;
   align-items: center;

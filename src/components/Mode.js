@@ -2,13 +2,16 @@ import React, { useState, useEffect } from "react";
 import Context from "../context";
 
 export default function Mode(props) {
+
+//dark mode
+function Mode(props) {
   const [isDay, toggleDay] = useState(true);
 
   useEffect(() => {
     if (JSON.parse(localStorage.getItem("day")) === true) {
       toggleDay(() => !isDay);
     }
-  }, []);
+  }, []); //isDay warning
 
   useEffect(() => {
     if (!isDay) {
@@ -24,4 +27,4 @@ export default function Mode(props) {
       {props.children}
     </Context.Provider>
   );
-}
+}}
